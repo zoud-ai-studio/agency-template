@@ -225,3 +225,7 @@ coverage/
 playwright-report/
 test-results/
 *.tsbuildinfo
+
+# Local test output and agent working files
+.test-dist/
+.claude/
