@@ -1,4 +1,4 @@
-.PHONY: setup detect lint type test build e2e eval check ci
+.PHONY: setup detect lint type test build e2e eval preview check ci
 
 # The app lives in web/ or in the repo root.
 WEB := $(if $(wildcard web/package.json),web,$(if $(wildcard package.json),.,))
@@ -19,7 +19,11 @@ detect:
 
 lint:
 	@if [ -f pyproject.toml ]; then uv run ruff check .; fi
-	@if [ -n "$(WEB)" ]; then npm run lint --prefix $(WEB); fi
+	@if [ -n "$(WEB)" ]; then \
+		grep -Eq '"lint": *"[^"]*(eslint|biome)' $(WEB)/package.json || { \
+			echo "make lint: FAIL the lint script must run eslint or biome, not only a type check"; exit 1; }; \
+		npm run lint --prefix $(WEB); \
+	fi
 
 type:
 	@if [ -d app ] && [ -f pyproject.toml ]; then uv run mypy app; fi
@@ -34,6 +38,9 @@ build:
 
 e2e:
 	@if [ -n "$(WEB)" ]; then cd $(WEB) && npx playwright install chromium && npx playwright test; fi
+
+preview:
+	@if [ -n "$(WEB)" ]; then npm run dev --prefix $(WEB) -- --port 3001; else echo "make preview: no web app here"; fi
 
 eval:
 	@if [ -f evals/run.py ]; then uv run python evals/run.py; fi

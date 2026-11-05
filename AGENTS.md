@@ -1,11 +1,11 @@
 # AGENTS.md: rules for every agent in this repo
 
 ## Commands (use only these)
-make setup · make check · make ci · make test · make e2e · make eval
+make setup · make check · make ci · make test · make e2e · make eval · make preview
 
 ## Default stack (don't change without an ADR)
 - Backend: Python 3.12, FastAPI, Postgres, pytest
-- Frontend: Next.js + TypeScript, Playwright for E2E
+- Frontend: Next.js + TypeScript, ESLint (npm run lint must run eslint, not tsc), Playwright for E2E
 - Local services: Podman / Compose
 
 ## Where things live
